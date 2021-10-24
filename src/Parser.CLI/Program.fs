@@ -8,10 +8,8 @@ let main argv =
   let jsonToParse =
     argv
     |> List.ofArray
-    |> function
-    | [ oneArg ] -> oneArg
-    | firstArg::_ -> firstArg
-    | [] -> DefaultJsonToParse
+    |> List.tryHead
+    |> Option.defaultValue DefaultJsonToParse
 
   let parseResult = 
     jsonToParse
