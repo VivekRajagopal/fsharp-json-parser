@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  ci:
 
     runs-on: ubuntu-latest
 
@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
         include-prerelease: true
-    - name: Restore dependencies
+    - name: Build & Test
       working-directory: src
       run: |
         dotnet restore
