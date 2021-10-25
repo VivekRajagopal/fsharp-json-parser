@@ -1,4 +1,4 @@
-name: ci_webui
+name: cicd_webui
 
 on:
   push:
