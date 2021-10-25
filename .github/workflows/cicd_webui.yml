@@ -1,0 +1,52 @@
+name: ci_webui
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  job_ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+          include-prerelease: true
+
+      - name: Build Fable App
+        working-directory: src/Parser.WebUI
+        run: |
+          dotnet tool restore
+          npm install
+          npm run build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: webui
+          path: src/Parser.WebUI/dist
+
+  job_cd:
+    runs-on: ubuntu-latest
+    needs: job_ci
+
+    steps:
+      - name: Download webui Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: webui
+          path: dist
+
+      - name: Publish to Netlify
+        uses: jsmrcaga/action-netlify-deploy@v1.1.0
+        with:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}
+          NETLIFY_DEPLOY_TO_PROD: ${{ github.ref == 'refs/heads/main' }}
+          NETLIFY_SITE_ID: 830d4175-e947-40a4-8144-3bff0a4df3fe
+          build_directory: dist
