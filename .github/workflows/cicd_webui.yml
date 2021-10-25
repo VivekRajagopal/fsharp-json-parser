@@ -34,6 +34,7 @@ jobs:
 
   job_cd:
     runs-on: ubuntu-latest
+    needs: job_ci
 
     steps:
       - name: Download webui Artifact
