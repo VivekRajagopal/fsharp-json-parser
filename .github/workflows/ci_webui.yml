@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: ci_webui
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  ci:
+  job_ci:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,16 +19,12 @@ jobs:
           dotnet-version: 6.0.x
           include-prerelease: true
 
-      - name: Build & Test
-        working-directory: src
-        run: |
-          dotnet restore
-          dotnet build --no-restore
-          dotnet test --no-build --verbosity normal
-
       - name: Build Fable App
         working-directory: src/Parser.WebUI
-        run: npm run build
+        run: |
+          dotnet tool restore
+          npm install
+          npm run build
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
