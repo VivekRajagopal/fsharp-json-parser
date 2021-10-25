@@ -29,4 +29,23 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
+          name: webui
           path: src/Parser.WebUI/dist
+
+  job_cd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download webui Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: webui
+          path: dist
+
+      - name: Publish to Netlify
+        uses: jsmrcaga/action-netlify-deploy@v1.1.0
+        with:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}
+          NETLIFY_DEPLOY_TO_PROD: false
+          NETLIFY_SITE_ID: 830d4175-e947-40a4-8144-3bff0a4df3fe
+          build_directory: dist
